@@ -1,0 +1,22 @@
+services:
+  db:
+    container_name: banking-system-jpa-postgres
+    image: postgres
+    environment:
+      POSTGRES_USER: banking-system
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: banking-system
+    ports:
+      - "5336:5432"
+    restart: unless-stopped
+    volumes:
+      - db:/data/postgres
+    networks:
+      - banking-system
+
+networks:
+  banking-system:
+    driver: bridge
+
+volumes:
+  db:
