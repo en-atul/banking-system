@@ -33,19 +33,19 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
 
     // public endpoints that don't require authentication
     private static final List<String> PUBLIC_ENDPOINTS = Arrays.asList(
-        "/api/v1/auth/**",
-        "/actuator/**",
-        "/swagger-ui/**",
-        "/v3/api-docs/**"
+            "/api/v1/auth/**",
+            "/actuator/**",
+            "/swagger-ui/**",
+            "/v3/api-docs/**"
     );
 
     // role-based access control for different endpoints
     private static final Map<String, List<String>> ROLE_REQUIREMENTS = Map.of(
-        "/account/**", Arrays.asList("USER", "ADMIN"),
-        "/customer/**", Arrays.asList("USER", "ADMIN"),
-        "/transaction/**", Arrays.asList("USER", "ADMIN"),
-        "/ledger/**", Arrays.asList("ADMIN"),
-        "/notification/**", Arrays.asList("USER", "ADMIN")
+            "/account/**", Arrays.asList("USER", "ADMIN"),
+            "/customer/**", Arrays.asList("USER", "ADMIN"),
+            "/transaction/**", Arrays.asList("USER", "ADMIN"),
+            "/ledger/**", Arrays.asList("ADMIN"),
+            "/notification/**", Arrays.asList("USER", "ADMIN")
     );
 
     public AuthenticationFilter(GatewayJwtValidator jwtValidator) {
@@ -145,4 +145,4 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
     public int getOrder() {
         return -100; // High priority to run before other filters
     }
-} 
+}

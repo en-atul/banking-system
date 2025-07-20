@@ -28,12 +28,12 @@ public class GatewayJwtValidator extends AbstractJwtValidator {
             // Check if token is expired
             if (isTokenExpired(token)) {
                 return new JwtClaims(
-                    claims.getId(),
-                    claims.getSubject(),
-                    claims.get("userId", Long.class),
-                    (java.util.Collection<String>) claims.get("roles"),
-                    claims.get("type", String.class),
-                    false
+                        claims.getId(),
+                        claims.getSubject(),
+                        claims.get("userId", Long.class),
+                        (java.util.Collection<String>) claims.get("roles"),
+                        claims.get("type", String.class),
+                        false
                 );
             }
 
@@ -42,26 +42,26 @@ public class GatewayJwtValidator extends AbstractJwtValidator {
             String tokenType = extractTokenType(token);
             if (!"ACCESS".equals(tokenType)) {
                 return new JwtClaims(
+                        claims.getId(),
+                        claims.getSubject(),
+                        claims.get("userId", Long.class),
+                        (java.util.Collection<String>) claims.get("roles"),
+                        tokenType,
+                        false
+                );
+            }
+
+            return new JwtClaims(
                     claims.getId(),
                     claims.getSubject(),
                     claims.get("userId", Long.class),
                     (java.util.Collection<String>) claims.get("roles"),
                     tokenType,
-                    false
-                );
-            }
-
-            return new JwtClaims(
-                claims.getId(),
-                claims.getSubject(),
-                claims.get("userId", Long.class),
-                (java.util.Collection<String>) claims.get("roles"),
-                tokenType,
-                true
+                    true
             );
 
         } catch (Exception e) {
             return new JwtClaims(null, null, null, null, null, false);
         }
     }
-} 
+}
