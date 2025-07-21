@@ -1,22 +1,15 @@
+version: "3.8"
+
 services:
-  db:
-    container_name: banking-system-jpa-postgres
-    image: postgres
-    environment:
-      POSTGRES_USER: banking-system
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: banking-system
+  zipkin-server:
+    image: openzipkin/zipkin:2.23
+    container_name: zipkin-server
+    mem_limit: 300m
     ports:
-      - "5336:5432"
-    restart: unless-stopped
-    volumes:
-      - db:/data/postgres
+      - "9411:9411"
     networks:
-      - banking-system
+      - tracing
 
 networks:
-  banking-system:
+  tracing:
     driver: bridge
-
-volumes:
-  db:
