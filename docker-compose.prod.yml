@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   naming-server:
-    image: blackimage/banking-system:naming-server:0.0.1-SNAPSHOT
+    image: blackimage/banking-system-naming-server:0.0.1-SNAPSHOT
     mem_limit: 700m
     ports:
       - "8761:8761"
@@ -12,7 +12,7 @@ services:
       - tracing
 
   api-gateway:
-    image: blackimage/banking-system:api-gateway:0.0.1-SNAPSHOT
+    image: blackimage/banking-system-api-gateway:0.0.1-SNAPSHOT
     mem_limit: 700m
     ports:
       - "8765:8765"
@@ -26,7 +26,7 @@ services:
       - tracing
 
   account-service:
-    image: blackimage/banking-system:account-service:0.0.1-SNAPSHOT
+    image: blackimage/banking-system-account-service:0.0.1-SNAPSHOT
     mem_limit: 700m
     ports:
       - "8100:8100"
@@ -40,7 +40,7 @@ services:
       - tracing
 
   auth-service:
-    image: blackimage/banking-system:auth-service:0.0.1-SNAPSHOT
+    image: blackimage/banking-system-auth-service:0.0.1-SNAPSHOT
     mem_limit: 700m
     ports:
       - "8200:8200"
@@ -54,7 +54,7 @@ services:
       - tracing
 
   customer-service:
-    image: blackimage/banking-system:customer-service:0.0.1-SNAPSHOT
+    image: blackimage/banking-system-customer-service:0.0.1-SNAPSHOT
     mem_limit: 700m
     ports:
       - "8300:8300"
@@ -68,7 +68,7 @@ services:
       - tracing
 
   ledger-service:
-    image: blackimage/banking-system:ledger-service:0.0.1-SNAPSHOT
+    image: blackimage/banking-system-ledger-service:0.0.1-SNAPSHOT
     mem_limit: 700m
     ports:
       - "8400:8400"
@@ -82,7 +82,7 @@ services:
       - tracing
 
   notification-service:
-    image: blackimage/banking-system:notification-service:0.0.1-SNAPSHOT
+    image: blackimage/banking-system-notification-service:0.0.1-SNAPSHOT
     mem_limit: 700m
     ports:
       - "8500:8500"
@@ -96,7 +96,7 @@ services:
       - tracing
 
   transaction-service:
-    image: blackimage/banking-system:transaction-service:0.0.1-SNAPSHOT
+    image: blackimage/banking-system-transaction-service:0.0.1-SNAPSHOT
     mem_limit: 700m
     ports:
       - "8600:8600"

@@ -76,6 +76,17 @@ The `shared-jwt-util` module provides:
    mvn clean install
    ```
 
+### Start Docker
+
+```bash
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
+```
+
+```bash
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml up
+```
+
+
 ### Running Services
 1. Start Config Server
 2. Start Naming Server (Eureka)
