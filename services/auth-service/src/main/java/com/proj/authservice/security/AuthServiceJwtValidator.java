@@ -7,6 +7,9 @@ import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 @Component
 public class AuthServiceJwtValidator extends AbstractJwtValidator {
 
@@ -29,19 +32,21 @@ public class AuthServiceJwtValidator extends AbstractJwtValidator {
                 return new JwtClaims(null, null, null, null, null, false);
             }
 
+            Collection<String> roles = extractRoles(claims);
+            String tokenType = extractTokenType(token);
+
             // Check if token is expired
             if (isTokenExpired(token)) {
                 return new JwtClaims(
-                    claims.getId(),
-                    claims.getSubject(),
-                    claims.get("userId", Long.class),
-                    (java.util.Collection<String>) claims.get("roles"),
-                    claims.get("type", String.class),
-                    false
+                        claims.getId(),
+                        claims.getSubject(),
+                        claims.get("userId", Long.class),
+                        roles,
+                        claims.get("type", String.class),
+                        false
                 );
             }
 
-            String tokenType = extractTokenType(token);
             boolean isValid = false;
 
             // For access tokens, validate against database
@@ -55,16 +60,31 @@ public class AuthServiceJwtValidator extends AbstractJwtValidator {
             }
 
             return new JwtClaims(
-                claims.getId(),
-                claims.getSubject(),
-                claims.get("userId", Long.class),
-                (java.util.Collection<String>) claims.get("roles"),
-                tokenType,
-                isValid
+                    claims.getId(),
+                    claims.getSubject(),
+                    claims.get("userId", Long.class),
+                    roles,
+                    tokenType,
+                    isValid
             );
 
         } catch (Exception e) {
             return new JwtClaims(null, null, null, null, null, false);
         }
     }
-} 
+
+    private Collection<String> extractRoles(Claims claims) {
+        Object rawRoles = claims.get("roles");
+        Collection<String> roles = new ArrayList<>();
+
+        if (rawRoles instanceof Collection<?>) {
+            for (Object role : (Collection<?>) rawRoles) {
+                if (role instanceof String) {
+                    roles.add((String) role);
+                }
+            }
+        }
+
+        return roles;
+    }
+}
