@@ -1,7 +1,7 @@
 services:
   db:
     container_name: banking-system-jpa-postgres
-    image: postgres:15
+    image: postgres
     environment:
       POSTGRES_USER: banking-system
       POSTGRES_PASSWORD: password
@@ -19,4 +19,4 @@ volumes:
 
 networks:
   tracing:
-    external: true
+    driver: bridge

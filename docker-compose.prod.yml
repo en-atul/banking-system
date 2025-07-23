@@ -29,10 +29,11 @@ services:
       - "8765:8765"
     depends_on:
       - naming-server
+      - zipkin-server
     environment:
       - NODE_ENV=production
       - EUREKA.CLIENT.SERVICEURL.DEFAULTZONE=http://naming-server:8761/eureka
-      - SPRING.ZIPKIN.BASEURL=http://zipkin-server:9411/
+      - MANAGEMENT.ZIPKIN.TRACING.ENDPOINT=http://zipkin-server:9411/api/v2/spans
     networks:
       - tracing
 
@@ -47,24 +48,28 @@ services:
   #   environment:
   #     - NODE_ENV=production
   #     - EUREKA.CLIENT.SERVICEURL.DEFAULTZONE=http://naming-server:8761/eureka
-  #     - SPRING.ZIPKIN.BASEURL=http://zipkin-server:9411/
+  #     - MANAGEMENT.ZIPKIN.TRACING.ENDPOINT=http://zipkin-server:9411/api/v2/spans
   #   networks:
   #     - tracing
 
-  # auth-service:
-  #   image: blackimage/banking-system-auth-service:0.0.1-SNAPSHOT
-  #   mem_limit: 700m
-  #   ports:
-  #     - "8200:8200"
-  #   depends_on:
-  #     - config-server
-  #     - naming-server
-  #   environment:
-  #     - NODE_ENV=production
-  #     - EUREKA.CLIENT.SERVICEURL.DEFAULTZONE=http://naming-server:8761/eureka
-  #     - SPRING.ZIPKIN.BASEURL=http://zipkin-server:9411/
-  #   networks:
-  #     - tracing
+  auth-service:
+    image: blackimage/banking-system-auth-service:0.0.1-SNAPSHOT
+    mem_limit: 1500m
+    ports:
+      - "8200:8200"
+    depends_on:
+      - config-server
+      - naming-server
+      - zipkin-server
+    environment:
+      - NODE_ENV=production
+      - CONFIG_SERVER_URL=http://config-server:8888
+      - SPRING.PROFILES.ACTIVE=prod
+      - SPRING.CLOUD.CONFIG.PROFILE=prod
+      - EUREKA.CLIENT.SERVICEURL.DEFAULTZONE=http://naming-server:8761/eureka
+      - MANAGEMENT.ZIPKIN.TRACING.ENDPOINT=http://zipkin-server:9411/api/v2/spans
+    networks:
+      - tracing
 
   # customer-service:
   #   image: blackimage/banking-system-customer-service:0.0.1-SNAPSHOT
@@ -77,7 +82,7 @@ services:
   #   environment:
   #     - NODE_ENV=production
   #     - EUREKA.CLIENT.SERVICEURL.DEFAULTZONE=http://naming-server:8761/eureka
-  #     - SPRING.ZIPKIN.BASEURL=http://zipkin-server:9411/
+  #     - MANAGEMENT.ZIPKIN.TRACING.ENDPOINT=http://zipkin-server:9411/api/v2/spans
   #   networks:
   #     - tracing
 
@@ -92,7 +97,7 @@ services:
   #   environment:
   #     - NODE_ENV=production
   #     - EUREKA.CLIENT.SERVICEURL.DEFAULTZONE=http://naming-server:8761/eureka
-  #     - SPRING.ZIPKIN.BASEURL=http://zipkin-server:9411/
+  #     - MANAGEMENT.ZIPKIN.TRACING.ENDPOINT=http://zipkin-server:9411/api/v2/spans
   #   networks:
   #     - tracing
 
@@ -107,7 +112,7 @@ services:
   #   environment:
   #     - NODE_ENV=production
   #     - EUREKA.CLIENT.SERVICEURL.DEFAULTZONE=http://naming-server:8761/eureka
-  #     - SPRING.ZIPKIN.BASEURL=http://zipkin-server:9411/
+  #     - MANAGEMENT.ZIPKIN.TRACING.ENDPOINT=http://zipkin-server:9411/api/v2/spans
   #   networks:
   #     - tracing
 
@@ -122,7 +127,7 @@ services:
   #   environment:
   #     - NODE_ENV=production
   #     - EUREKA.CLIENT.SERVICEURL.DEFAULTZONE=http://naming-server:8761/eureka
-  #     - SPRING.ZIPKIN.BASEURL=http://zipkin-server:9411/
+  #     - MANAGEMENT.ZIPKIN.TRACING.ENDPOINT=http://zipkin-server:9411/api/v2/spans
   #   networks:
   #     - tracing
 
