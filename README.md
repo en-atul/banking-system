@@ -2,6 +2,21 @@
 
 This project implements a microservices banking system with centralized JWT authentication at the API Gateway level.
 
+## 🚀 Quick Start
+
+### Entry Point
+**All API requests must go through the API Gateway at:**
+```
+http://localhost:8765
+```
+
+**⚠️ Important:** Do NOT access services directly. Always use the API Gateway as the single entry point.
+
+### Service Discovery
+- **Eureka Server**: http://localhost:8761/
+- **Kafka UI**: http://localhost:4002/
+- **Kafdrop**: http://localhost:9000/
+
 ## Architecture Overview
 
 ### Authentication Flow
@@ -58,11 +73,12 @@ The `shared-jwt-util` module provides:
 - No database dependency for performance
 - Validates token structure and expiration
 
-## Building and Running
+## 🏗️ Building and Running
 
 ### Prerequisites
 - Java 17+
 - Maven 3.6+
+- Docker & Docker Compose
 
 ### Build Order
 1. Build shared-jwt-util first:
@@ -76,27 +92,208 @@ The `shared-jwt-util` module provides:
    mvn clean install
    ```
 
-### Start Docker
+## 🚀 Step-by-Step Application Startup
 
+### ⚠️ **IMPORTANT: Docker is Essential**
+
+**Docker must be started FIRST** because it provides all the required infrastructure services:
+- **PostgreSQL** - Database for Account and Customer services
+- **MongoDB** - Database for Notification service  
+- **Kafka** - Message broker for asynchronous communication
+- **Zookeeper** - Required for Kafka cluster management
+- **Kafka UI** - Web interface for Kafka monitoring
+- **Zipkin** - Distributed tracing system
+- **Eureka Server** - Service discovery and registry
+
+### Step 1: Start Infrastructure Services
+
+**For Development:**
 ```bash
+# Start all infrastructure services (PostgreSQL, MongoDB, Kafka, Zookeeper, Eureka, Zipkin)
 docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
 ```
 
+**For Production:**
 ```bash
+# Start production infrastructure
 docker-compose -f docker-compose.yml -f docker-compose.prod.yml up
 ```
 
+**Verify Infrastructure is Running:**
+```bash
+# Check if all containers are running
+docker ps
 
-### Running Services
-1. Start Config Server
-2. Start Naming Server (Eureka)
-3. Start API Gateway
-4. Start Auth Service
-5. Start other services as needed
+# Expected containers:
+# - postgres (PostgreSQL database)
+# - mongo (MongoDB database)
+# - zookeeper (Kafka dependency)
+# - kafka (Message broker)
+# - kafka-ui (Kafka monitoring)
+# - kafdrop (Alternative Kafka UI)
+# - zipkin (Distributed tracing)
+```
 
-### Testing Authentication
+### Step 2: Verify Infrastructure Services
 
-#### 1. Register a user:
+**Check Service Health:**
+- **Eureka Server**: http://localhost:8761/ (should show empty service list initially)
+- **Kafka UI**: http://localhost:4002/ (should show Kafka cluster)
+- **Kafdrop**: http://localhost:9000/ (alternative Kafka UI)
+- **Zipkin**: http://localhost:9411/ (distributed tracing)
+
+### Step 3: Start Microservices in Order
+
+**⚠️ Start services in this specific order:**
+
+1. **Config Server** (Port: 8888)
+   ```bash
+   cd config-server
+   mvn spring-boot:run
+   ```
+   - Provides centralized configuration
+   - Other services depend on this
+
+2. **Naming Server/Eureka** (Port: 8761)
+   ```bash
+   cd naming-server
+   mvn spring-boot:run
+   ```
+   - Service discovery registry
+   - All services register here
+
+3. **API Gateway** (Port: 8765)
+   ```bash
+   cd api-gateway
+   mvn spring-boot:run
+   ```
+   - Main entry point for all API requests
+   - Requires Eureka for service discovery
+
+4. **Auth Service** (Port: 8000)
+   ```bash
+   cd services/auth-service
+   mvn spring-boot:run
+   ```
+   - Handles user authentication and JWT tokens
+   - Required for all protected endpoints
+
+5. **Account Service** (Port: 8001)
+   ```bash
+   cd services/account-service
+   mvn spring-boot:run
+   ```
+   - Manages bank accounts
+   - Requires Kafka for notifications
+
+6. **Customer Service** (Port: 8002)
+   ```bash
+   cd services/customer-service
+   mvn spring-boot:run
+   ```
+   - Manages customer information
+
+7. **Notification Service** (Port: 8500)
+   ```bash
+   cd services/notification-service
+   mvn spring-boot:run
+   ```
+   - Handles notifications via Kafka
+   - Requires MongoDB and Kafka
+
+8. **Transaction Service** (Port: 8003)
+   ```bash
+   cd services/transaction-service
+   mvn spring-boot:run
+   ```
+   - Manages financial transactions
+
+9. **Ledger Service** (Port: 8004)
+   ```bash
+   cd services/ledger-service
+   mvn spring-boot:run
+   ```
+   - Manages ledger entries (Admin only)
+
+### Step 4: Verify All Services are Running
+
+**Check Eureka Dashboard**: http://localhost:8761/
+- Should show all services registered
+- All services should have status "UP"
+
+**Check API Gateway Health**: http://localhost:8765/actuator/health
+- Should return healthy status
+
+**Test Authentication Flow**:
+```bash
+# Register a user
+curl -X POST http://localhost:8765/auth/api/v1/users \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "testuser",
+    "email": "test@example.com", 
+    "password": "password123",
+    "firstName": "Test",
+    "lastName": "User"
+  }'
+```
+
+### Infrastructure Services Overview
+
+| Service | Port | URL | Description | Status Check |
+|---------|------|-----|-------------|--------------|
+| **API Gateway** | 8765 | http://localhost:8765 | Main entry point for all API requests | `/actuator/health` |
+| **Eureka Server** | 8761 | http://localhost:8761/ | Service discovery and registry | Dashboard |
+| **Config Server** | 8888 | http://localhost:8888 | Centralized configuration | `/actuator/health` |
+| **Kafka UI** | 4002 | http://localhost:4002/ | Kafka cluster monitoring and management | Dashboard |
+| **Kafdrop** | 9000 | http://localhost:9000/ | Alternative Kafka UI | Dashboard |
+| **Zipkin** | 9411 | http://localhost:9411/ | Distributed tracing system | Dashboard |
+| **PostgreSQL** | 5336 | localhost:5336 | Account and Customer data | `docker ps` |
+| **MongoDB** | 27017 | localhost:27017 | Notification data | `docker ps` |
+| **Kafka** | 9092 | localhost:9092 | Message broker | Kafka UI |
+| **Zookeeper** | 2181 | localhost:2181 | Kafka dependency | `docker ps` |
+
+### 🚨 **Common Startup Issues**
+
+1. **"Connection refused" errors**
+   - Ensure Docker containers are running: `docker ps`
+   - Check if ports are available: `lsof -i :PORT`
+
+2. **"Service not found" in Eureka**
+   - Verify Config Server is running first
+   - Check service registration logs
+   - Ensure Eureka server is accessible
+
+3. **Kafka connection issues**
+   - Wait for Zookeeper to fully start
+   - Check Kafka UI at http://localhost:4002/
+   - Verify Kafka is advertising correct listeners
+
+4. **Database connection failures**
+   - Ensure PostgreSQL/MongoDB containers are healthy
+   - Check database credentials in config
+   - Verify network connectivity between services
+
+## 🔄 Asynchronous Communication
+
+### Kafka Integration
+- **Kafka is required** for account creation and updates
+- When an account is created/updated, notifications are sent asynchronously via Kafka
+- **Kafka UI** at http://localhost:4002/ shows:
+  - Topics: `account-notifications`
+  - Message flow between Account Service and Notification Service
+  - Consumer groups and offsets
+
+### Notification Flow
+1. **Account Service** creates/updates account
+2. **Kafka Producer** sends notification event to `account-notifications` topic
+3. **Notification Service** consumes the event asynchronously
+4. **Notification** is saved to MongoDB
+5. **User** can retrieve notifications via API
+
+## 🔐 Testing Authentication
+
+### 1. Register a user:
 ```bash
 curl -X POST http://localhost:8765/auth/api/v1/users \
   -H "Content-Type: application/json" \
@@ -109,7 +306,7 @@ curl -X POST http://localhost:8765/auth/api/v1/users \
   }'
 ```
 
-#### 2. Login to get token:
+### 2. Login to get access token:
 ```bash
 curl -X POST http://localhost:8765/auth/api/v1/auth/login \
   -H "Content-Type: application/json" \
@@ -119,8 +316,97 @@ curl -X POST http://localhost:8765/auth/api/v1/auth/login \
   }'
 ```
 
-#### 3. Access protected endpoint:
-```bash
-curl -X GET http://localhost:8765/account/123 \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+**Response:**
+```json
+{
+  "message": "Login successful",
+  "data": {
+    "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    "tokenType": "Bearer",
+    "expiresIn": 1800
+  }
+}
 ```
+
+### 3. Access protected endpoints with access token:
+```bash
+# Create account (requires USER or ADMIN role)
+curl -X POST http://localhost:8765/account/api/v1/accounts \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -d '{
+    "customerId": 1,
+    "accountType": "SAVING",
+    "balance": 10000
+  }'
+
+# Get account details
+curl -X GET http://localhost:8765/account/api/v1/accounts/1 \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+
+# Get notifications
+curl -X GET http://localhost:8765/notification/api/v1/notifications \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+```
+
+## 📋 API Endpoints
+
+### Public Endpoints (No Authentication Required)
+- `POST /auth/api/v1/users` - Register user
+- `POST /auth/api/v1/auth/login` - Login
+- `POST /auth/api/v1/auth/refresh` - Refresh token
+
+### Protected Endpoints (Require Access Token)
+- `GET/POST/PUT/DELETE /account/api/v1/accounts/**` - Account management
+- `GET/POST/PUT/DELETE /customer/api/v1/customers/**` - Customer management
+- `GET/POST/PUT/DELETE /transaction/api/v1/transactions/**` - Transaction management
+- `GET/POST/PUT/DELETE /ledger/api/v1/ledgers/**` - Ledger management (ADMIN only)
+- `GET/POST/PUT/DELETE /notification/api/v1/notifications/**` - Notification management
+
+## 🔍 Monitoring and Debugging
+
+### Service Discovery
+- **Eureka Dashboard**: http://localhost:8761/
+  - View all registered services
+  - Check service health status
+  - Monitor service instances
+
+### Kafka Monitoring
+- **Kafka UI**: http://localhost:4002/
+  - Monitor topics and partitions
+  - View message flow
+  - Check consumer groups
+  - Browse messages in topics
+
+- **Kafdrop**: http://localhost:9000/
+  - Alternative Kafka UI
+  - Message browsing and inspection
+
+### Health Checks
+- **API Gateway**: http://localhost:8765/actuator/health
+- **Auth Service**: http://localhost:8000/actuator/health
+- **Account Service**: http://localhost:8001/actuator/health
+- **Customer Service**: http://localhost:8002/actuator/health
+- **Notification Service**: http://localhost:8500/actuator/health
+
+## 🚨 Troubleshooting
+
+### Common Issues
+1. **"Access token is missing or invalid"**
+   - Ensure you're using the API Gateway (port 8765)
+   - Include `Authorization: Bearer YOUR_TOKEN` header
+   - Check if token is expired
+
+2. **"Service not found"**
+   - Check Eureka dashboard at http://localhost:8761/
+   - Ensure all services are running and registered
+
+3. **Kafka connection issues**
+   - Verify Kafka is running: `docker ps | grep kafka`
+   - Check Kafka UI at http://localhost:4002/
+   - Ensure notification service can connect to Kafka
+
+4. **Database connection issues**
+   - Check if PostgreSQL/MongoDB containers are running
+   - Verify database credentials in application properties
