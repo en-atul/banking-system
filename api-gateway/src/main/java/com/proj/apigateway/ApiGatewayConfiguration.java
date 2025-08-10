@@ -15,13 +15,13 @@ public class ApiGatewayConfiguration {
                         .uri("lb://auth-service"))
                 .route(p -> p.path("/api/v1/account/**")
                         .uri("lb://account-service"))
-                .route(p -> p.path("/api/v1/customer/**")
+                .route(p -> p.path("/api/v1/customers/**")
                         .uri("lb://customer-service"))
-                .route(p -> p.path("/api/v1/transaction/**")
+                .route(p -> p.path("/api/v1/transactions/**")
                         .uri("lb://transaction-service"))
-                .route(p -> p.path("/api/v1/ledger/**")
+                .route(p -> p.path("/api/v1/ledger-entries/**")
                         .uri("lb://ledger-service"))
-                .route(p -> p.path("/api/v1/notification/**")
+                .route(p -> p.path("/api/v1/notifications/**")
                         .uri("lb://notification-service"))
                 .build();
     }
