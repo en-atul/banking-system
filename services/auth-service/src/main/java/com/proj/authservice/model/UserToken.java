@@ -1,6 +1,6 @@
 package com.proj.authservice.model;
 
-
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -37,21 +37,26 @@ public class UserToken {
     private String userAgent;
 
     @Column(name = "created_at")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime createdAt;
 
     @Column(name = "access_token_expires_at")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime accessTokenExpiresAt;
 
     @Column(name = "refresh_token_expires_at")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime refreshTokenExpiresAt;
 
     @Column(name = "last_accessed_at")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime lastAccessedAt;
 
     @Column(name = "is_revoked")
     private boolean revoked;
 
     @Column(name = "revoked_at")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime revokedAt;
 
     @Column(name = "revoked_reason")

@@ -1,4 +1,4 @@
-package com.proj.customer_service;
+package com.proj.customerservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,4 +10,4 @@ class CustomerServiceApplicationTests {
 	void contextLoads() {
 	}
 
-}
+} 

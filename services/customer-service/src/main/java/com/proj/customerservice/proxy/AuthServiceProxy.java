@@ -1,4 +1,4 @@
-package com.proj.customer_service.proxy;
+package com.proj.customerservice.proxy;
 
 import org.springframework.cloud.openfeign.FeignClient;
 

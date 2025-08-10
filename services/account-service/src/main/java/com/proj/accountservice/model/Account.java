@@ -1,5 +1,6 @@
 package com.proj.accountservice.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.proj.accountservice.enums.AccountType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -32,6 +33,9 @@ public class Account {
 
     private BigDecimal balance = BigDecimal.ZERO;
 
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime createdAt = LocalDateTime.now();
+    
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime updatedAt = LocalDateTime.now();
 }

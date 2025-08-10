@@ -1,13 +1,13 @@
-package com.proj.notification_service;
+package com.proj.ledgerservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class NotificationServiceApplicationTests {
+class LedgerServiceApplicationTests {
 
 	@Test
 	void contextLoads() {
 	}
 
-}
+} 

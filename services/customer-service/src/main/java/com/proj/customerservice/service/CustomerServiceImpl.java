@@ -21,6 +21,7 @@ public class CustomerServiceImpl implements CustomerService {
         customer.setUserId(request.userId());
         customer.setFirstName(request.firstName());
         customer.setLastName(request.lastName());
+        customer.setEmail(request.email());
         customer.setPhoneNumber(request.phoneNumber());
         customer.setAddress(request.address());
         customer.setCreatedAt(LocalDateTime.now());
@@ -49,7 +50,9 @@ public class CustomerServiceImpl implements CustomerService {
             if (request.lastName() != null) {
                 existingCustomer.setLastName(request.lastName());
             }
-
+//            if (request.email() != null) {
+//                existingCustomer.setEmail(request.email());
+//            }
             if (request.phoneNumber() != null) {
                 existingCustomer.setPhoneNumber(request.phoneNumber());
             }

@@ -1,4 +1,4 @@
-package com.proj.ledger_service;
+package com.proj.ledgerservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

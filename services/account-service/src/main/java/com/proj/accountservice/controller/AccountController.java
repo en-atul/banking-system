@@ -16,7 +16,7 @@ import static org.springframework.http.HttpStatus.*;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/accounts")
+@RequestMapping("${api.prefix}/accounts")
 public class AccountController {
     private final AccountService accountService;
 

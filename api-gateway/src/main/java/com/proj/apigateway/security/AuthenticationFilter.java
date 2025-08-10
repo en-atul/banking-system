@@ -48,9 +48,9 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
             "/notification/**", Arrays.asList("USER", "ADMIN")
     );
 
-    public AuthenticationFilter(GatewayJwtValidator jwtValidator) {
+    public AuthenticationFilter(GatewayJwtValidator jwtValidator, ObjectMapper objectMapper) {
         this.jwtValidator = jwtValidator;
-        this.objectMapper = new ObjectMapper();
+        this.objectMapper = objectMapper;
         this.pathMatcher = new AntPathMatcher();
     }
 

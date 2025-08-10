@@ -13,7 +13,7 @@ import static org.springframework.http.HttpStatus.*;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/notifications")
+@RequestMapping("${api.prefix}/notifications")
 public class NotificationController {
 
     private final NotificationRepository notificationRepository;

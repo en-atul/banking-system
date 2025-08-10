@@ -44,6 +44,7 @@ public class CustomerController {
         }
     }
 
+
     @GetMapping("/email/{email}")
     public ResponseEntity<ApiResponse> getCustomerByEmail(@PathVariable String email) {
         try {

@@ -1,13 +1,13 @@
-package com.proj.ledger_service;
+package com.proj.accountservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class LedgerServiceApplicationTests {
+class AccountServiceApplicationTests {
 
 	@Test
 	void contextLoads() {
 	}
 
-}
+} 

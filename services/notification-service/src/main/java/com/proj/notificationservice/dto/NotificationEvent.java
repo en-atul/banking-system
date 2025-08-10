@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class NotificationEvent {
-    
     private String eventType; // ACCOUNT_CREATED, ACCOUNT_UPDATED
     private Long userId;
     private Long accountId;

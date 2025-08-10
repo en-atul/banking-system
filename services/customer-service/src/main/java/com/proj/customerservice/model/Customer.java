@@ -1,5 +1,6 @@
 package com.proj.customerservice.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,9 +27,15 @@ public class Customer {
     private String firstName;
     private String lastName;
 
+    @Column(unique = true, nullable = false)
+    private String email;
+
     private String phoneNumber;
     private String address;
 
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime createdAt = LocalDateTime.now();
+    
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime updatedAt = LocalDateTime.now();
 }

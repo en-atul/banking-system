@@ -1,4 +1,4 @@
-package com.proj.transaction_service;
+package com.proj.transactionservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,4 +10,4 @@ class TransactionServiceApplicationTests {
 	void contextLoads() {
 	}
 
-}
+} 
