@@ -80,6 +80,42 @@ The `shared-jwt-util` module provides:
 - Maven 3.6+
 - Docker & Docker Compose
 
+### Configuration Setup
+
+**⚠️ IMPORTANT: External Configuration Repository Required**
+
+This project uses centralized configuration managed via [Spring Cloud Config](https://spring.io/projects/spring-cloud-config) from an external repository:
+
+**Configuration Repository**: [https://github.com/en-atul/banking-system-config](https://github.com/en-atul/banking-system-config)
+
+#### Option 1: Use Remote GitHub Repository (Recommended)
+The config server is pre-configured to fetch configuration from the remote GitHub repository. No additional setup required.
+
+#### Option 2: Clone and Use Local Repository
+If you want to modify configurations locally:
+
+1. **Clone the config repository:**
+   ```bash
+   git clone https://github.com/en-atul/banking-system-config.git
+   cd banking-system-config
+   ```
+
+2. **Update config server path** in `config-server/src/main/resources/application.properties`:
+   ```properties
+   spring.cloud.config.server.git.uri=file:///path/to/your/local/banking-system-config
+   ```
+
+3. **Restart config server** after making changes
+
+#### Configuration Files Available
+The external repository contains configuration for all services:
+- `account-service.properties` / `account-service-dev.properties`
+- `auth-service.properties` / `auth-service-dev.properties`
+- `customer-service.properties` / `customer-service-dev.properties`
+- `notification-service.properties` / `notification-service-dev.properties`
+- `transaction-service.properties` / `transaction-service-dev.properties`
+- `ledger-service.properties` / `ledger-service-dev.properties`
+
 ### Build Order
 1. Build shared-jwt-util first:
    ```bash
@@ -151,8 +187,9 @@ docker ps
    cd config-server
    mvn spring-boot:run
    ```
-   - Provides centralized configuration
-   - Other services depend on this
+   - Provides centralized configuration from external repository
+   - Fetches config from [https://github.com/en-atul/banking-system-config](https://github.com/en-atul/banking-system-config)
+   - Other services depend on this for configuration
 
 2. **Naming Server/Eureka** (Port: 8761)
    ```bash
@@ -273,6 +310,12 @@ curl -X POST http://localhost:8765/auth/api/v1/users \
    - Ensure PostgreSQL/MongoDB containers are healthy
    - Check database credentials in config
    - Verify network connectivity between services
+
+5. **Config server connection issues**
+   - Verify config server can access [https://github.com/en-atul/banking-system-config](https://github.com/en-atul/banking-system-config)
+   - Check config server logs for Git repository access errors
+   - Ensure internet connectivity for remote config fetch
+   - If using local config, verify file path in config server properties
 
 ## 🔄 Asynchronous Communication
 
